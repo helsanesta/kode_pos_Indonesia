@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- <script src="./assets/validasi.js"></script> -->
+    <!-- <link rel="stylesheet" href="./assets/style.css"> -->
+    <title>Form Validasi Vaksinasi</title> 
+</head>
+<body style="background-color: #4456f5">
+    <div style="background-color: rgb(243, 176, 30); height: 100px;">
+        <div style="display: flex; justify-content: space-between; margin-right: 50px; margin-left: 50px">
+            <div style="margin-top: 20px; margin-bottom: 20px">
+                <img src="/assets/n-kodepos.png" alt="" style="width: 60px;">
+            </div>
+            <div style="margin-top: 30px; margin-bottom: 30px">
+                <h2 style="font-size: 30px;">
+                    Kode Pos Indonesia
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="container content">
+        <h1 class="text-center pt-5">Pencarian Daerah di Indonesia dengan Kode Pos</h1>
+        <form id="form" name="validasiForm" onsubmit="test()">
+            <div class="form-group mt-5">
+                <label class="font-weight-bold mt-1">Kode Pos</label>
+                <input type="text" name="kodepos" placeholder="Inputkan Kode Pos" class="form-control" maxlength="5">
+            </div>
+            <button type="submit" class="btn btn-dark" style="margin-bottom: 20px;">Submit</button>
+        </form>
+        <ul id="hasil">
+
+        </ul>
+    </div>
+    <script type="module">
+        import {post_code} from './assets/postal_array.js';
+        import {prov_data} from './assets/province.js';
+        
+        const form = document.getElementById('form');
+        form.addEventListener("submit", function(event){
+            event.preventDefault();
+            validateForm();
+        })
+
+        function validateForm() {
+            console.log("validateForm");
+            var code = document.forms["validasiForm"]["kodepos"].value;
+            if (code == "" || code == null) {
+                alert("Nama belum diisi");
+                return false;
+            }
+            else {
+                // alert("Data berhasil ditemukan");
+                const findPostal = post_code.filter((item) => {
+                    return item["postal_code"] == code;
+                });
+                console.log(findPostal);
+                const parentList = document.getElementById("hasil");
+                parentList.innerHTML = "";
+                findPostal.forEach((item) => {
+                    const list = document.createElement("li");
+                    list.innerHTML = item["postal_code"] + " - " + item["city"] + ", " + item["sub_district"]  + ", " +  item["urban"] + ", " + prov_data[item["province_code"]];
+                    parentList.appendChild(list);
+                });
+                alert("Data berhasil ditemukan");
+            }
+        }
+    </script>
+    <script type="module" src="./assets/postal_array.js"></script>
+    <script type="module" src="./assets/province.js"></script>
+    
+    
+</body>
+</html>
